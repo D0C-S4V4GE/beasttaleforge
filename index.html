@@ -1,1210 +1,384 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>BeastTaleForge - Where Pets Become Legends</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4a7c8a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="BeastTaleForge">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="BeastTaleForge">
-    
-    <!-- PWA Icons -->
-    <link rel="apple-touch-icon" sizes="192x192" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjNGE3YzhhIi8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI4MCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCQkb48L3RleHQ+Cjwvc3ZnPgo=">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjNGE3YzhhIi8+Cjx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8JCRvjwvdGV4dD4KPC9zdmc+Cg==">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BeastTaleForge — Gateway</title>
+    <meta
+      name="description"
+      content="BeastTaleForge gateway: choose a path into companion quests or remembrance stories."
+    />
     <style>
-        :root {
-            /* BTF Brand Colors */
-            --primary-blue: #4a7c8a;
-            --secondary-blue: #6b9cb0;
-            --accent-coral: #b76e79;
-            --rose-gold: #e8b4cb;
-            --dark-charcoal: #2c2c2c;
-            --light-gray: #f8f9fa;
-            --white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, #4a7c8a 0%, #6b9cb0 100%);
-            --gradient-coral: linear-gradient(135deg, #b76e79 0%, #e8b4cb 100%);
-            --gradient-dark: linear-gradient(135deg, #2c2c2c 0%, #4a4a4a 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-charcoal);
-            background: var(--light-gray);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* PWA-style animated background */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(45deg, #f8f9fa, #e8f4f7, #f0f8ff);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Floating particles effect */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .particle {
-            position: absolute;
-            font-size: 1.5rem;
-            color: rgba(74, 124, 138, 0.1);
-            animation: float-particle 20s infinite linear;
-        }
-
-        @keyframes float-particle {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* PWA App Container */
-        .app-container {
-            min-height: 100vh;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Header with PWA styling */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(74, 124, 138, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .logo-container:hover {
-            transform: scale(1.02);
-        }
-
-        .logo {
-            width: 45px;
-            height: 45px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 12px rgba(74, 124, 138, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .logo:hover {
-            transform: rotate(10deg) translateY(-2px);
-            box-shadow: 0 8px 16px rgba(74, 124, 138, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-
-        .logo:active {
-            transform: rotate(10deg) translateY(0px);
-            box-shadow: inset 0 3px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(74, 124, 138, 0.2);
-        }
-
-        .logo-text {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            letter-spacing: -0.3px;
-        }
-
-        .nav-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(74, 124, 138, 0.2);
-            padding: 1rem;
-            min-width: 200px;
-            z-index: 1001;
-        }
-
-        .nav-menu.active {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: var(--dark-charcoal);
-            font-weight: 500;
-            transition: color 0.2s ease;
-            padding: 0.5rem;
-            border-radius: 8px;
-        }
-
-        .nav-menu a:hover {
-            color: var(--primary-blue);
-            background: rgba(74, 124, 138, 0.1);
-        }
-
-        .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
-            border: 1px solid rgba(74, 124, 138, 0.2);
-        }
-
-        .menu-toggle:hover {
-            background: linear-gradient(145deg, #f8f8f8, #e8e8e8);
-            transform: translateY(-1px);
-        }
-
-        .menu-toggle:active {
-            background: linear-gradient(145deg, #e8e8e8, #f8f8f8);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1);
-            transform: translateY(1px);
-        }
-
-        .menu-line {
-            width: 24px;
-            height: 2px;
-            background: var(--primary-blue);
-            border-radius: 1px;
-            transition: all 0.3s ease;
-        }
-
-        /* Hero Section - PWA Style */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 100px 20px 60px;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            animation: heroFadeIn 1s ease-out;
-        }
-
-        @keyframes heroFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-logo {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 2rem;
-            background: var(--white);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 20px 60px rgba(74, 124, 138, 0.2);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-logo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(74, 124, 138, 0.1), transparent);
-            animation: rotate 3s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .hero-logo:hover::before {
-            opacity: 1;
-        }
-
-        @keyframes rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .hero-logo:hover {
-            transform: scale(1.05) rotate(2deg);
-            box-shadow: 0 30px 80px rgba(74, 124, 138, 0.3);
-        }
-
-        .hero-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 30px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        .tagline {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
-            color: var(--rose-gold);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
-            color: var(--dark-charcoal);
-            opacity: 0.8;
-            margin-bottom: 2.5rem;
-            line-height: 1.6;
-        }
-
-        /* PWA-style buttons with 3D effects */
-        .cta-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .cta-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 18px 32px;
-            border: none;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-
-        .cta-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cta-btn:hover::before {
-            left: 100%;
-        }
-
-        .cta-primary {
-            background: var(--gradient-primary);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .cta-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 124, 138, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-
-        .cta-primary:active {
-            transform: translateY(-1px);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(74, 124, 138, 0.2);
-        }
-
-        .cta-secondary {
-            background: var(--white);
-            color: var(--primary-blue);
-            border: 2px solid var(--primary-blue);
-            box-shadow: 0 6px 12px rgba(74, 124, 138, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
-        }
-
-        .cta-secondary:hover {
-            background: var(--primary-blue);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 124, 138, 0.2), inset 0 1px 0 rgba(255,255,255,0.2);
-        }
-
-        .cta-secondary:active {
-            transform: translateY(-1px);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(74, 124, 138, 0.2);
-        }
-
-        /* Features Section - App-like Cards */
-        .features {
-            padding: 80px 20px;
-            background: var(--white);
-        }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: clamp(2rem, 5vw, 2.8rem);
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.2rem;
-            color: var(--dark-charcoal);
-            opacity: 0.7;
-            margin-bottom: 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 24px;
-            border: 1px solid rgba(74, 124, 138, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(74, 124, 138, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
-            cursor: pointer;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 16px 40px rgba(74, 124, 138, 0.15), inset 0 1px 0 rgba(255,255,255,0.8);
-        }
-
-        .feature-card:active {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(74, 124, 138, 0.1), inset 0 3px 6px rgba(0,0,0,0.1);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-primary);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 2.2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 16px rgba(74, 124, 138, 0.2), inset 0 1px 0 rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .feature-icon:hover {
-            transform: scale(1.05) translateY(-2px);
-        }
-
-        .feature-icon:active {
-            transform: scale(1.02) translateY(0px);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(74, 124, 138, 0.2);
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: var(--dark-charcoal);
-            opacity: 0.8;
-            line-height: 1.6;
-        }
-
-        /* About Section */
-        .about-section {
-            padding: 80px 20px;
-            background: var(--light-gray);
-        }
-
-        /* Contact Section */
-        .contact-section {
-            padding: 80px 20px;
-            background: var(--white);
-        }
-
-        /* Maizy Tribute Section */
-        .maizy-tribute {
-            padding: 80px 20px;
-            background: var(--gradient-coral);
-            color: white;
-            text-align: center;
-        }
-
-        .tribute-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .tribute-title {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .tribute-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            opacity: 0.95;
-            font-style: italic;
-            margin-bottom: 2rem;
-        }
-
-        .tribute-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            animation: gentleBounce 3s ease-in-out infinite;
-        }
-
-        @keyframes gentleBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .maizy-image {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            margin: 0 auto 2rem;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            object-fit: cover;
-        }
-
-        /* Coming Soon Badge */
-        .coming-soon-badge {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            background: var(--gradient-coral);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 8px 24px rgba(183, 110, 121, 0.3);
-            z-index: 1001;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 0.9;
-            }
-        }
-
-        /* Install App Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: var(--gradient-primary);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 16px;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 8px 32px rgba(74, 124, 138, 0.3);
-            z-index: 1002;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            0% {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .install-text {
-            flex: 1;
-            margin-right: 16px;
-        }
-
-        .install-btn {
-            background: white;
-            color: var(--primary-blue);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .install-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .dismiss-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 4px;
-            margin-left: 8px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-        }
-
-        .dismiss-btn:hover {
-            opacity: 1;
-        }
-
-        /* Responsive Design */
-        @media (min-width: 768px) {
-            .cta-container {
-                flex-direction: row;
-                max-width: 600px;
-            }
-
-            .nav-menu {
-                display: flex;
-                gap: 2rem;
-                list-style: none;
-                position: static;
-                background: none;
-                box-shadow: none;
-                padding: 0;
-                min-width: auto;
-                flex-direction: row;
-            }
-
-            .nav-menu a {
-                text-decoration: none;
-                color: var(--dark-charcoal);
-                font-weight: 500;
-                transition: color 0.2s ease;
-                padding: 0;
-                background: none;
-            }
-
-            .nav-menu a:hover {
-                color: var(--primary-blue);
-                background: none;
-            }
-
-            .menu-toggle {
-                display: none;
-            }
-
-            .install-prompt {
-                left: auto;
-                right: 20px;
-                max-width: 350px;
-            }
-        }
-
-        /* Touch-friendly interactions */
-        @media (max-width: 767px) {
-            .cta-btn {
-                padding: 20px 32px;
-                font-size: 1.2rem;
-            }
-
-            .feature-card {
-                padding: 2rem;
-            }
-
-            .hero-logo {
-                width: 150px;
-                height: 150px;
-            }
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --light-gray: #1a1a1a;
-                --white: #2d2d2d;
-                --dark-charcoal: #e0e0e0;
-            }
-            
-            .animated-bg {
-                background: linear-gradient(45deg, #1a1a1a, #2d2d2d, #1f2937);
-            }
-        }
+      :root {
+        --bg: #070b12;
+        --card: rgba(255, 255, 255, 0.06);
+        --card2: rgba(255, 255, 255, 0.04);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --muted2: rgba(255, 255, 255, 0.55);
+        --accent-amber: rgba(255, 198, 120, 0.85);
+        --accent-sky: rgba(120, 170, 255, 0.55);
+        --accent-mint: rgba(140, 255, 210, 0.45);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      .bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.9;
+        background:
+          radial-gradient(900px 500px at 20% 10%, rgba(120, 170, 255, 0.14), transparent 60%),
+          radial-gradient(900px 500px at 80% 30%, rgba(255, 180, 120, 0.13), transparent 60%),
+          radial-gradient(1100px 700px at 50% 110%, rgba(140, 255, 210, 0.10), transparent 60%);
+      }
+
+      .wrap {
+        position: relative;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px 56px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 240px;
+      }
+
+      .mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .brand .title { font-weight: 700; font-size: 14px; letter-spacing: 0.02em; }
+      .brand .sub { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      a.btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.84);
+        text-decoration: none;
+        font-size: 13px;
+        line-height: 1;
+      }
+      a.btn:hover { background: rgba(255, 255, 255, 0.10); color: rgba(255, 255, 255, 0.95); }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--muted);
+        font-size: 12px;
+        width: fit-content;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent-amber);
+        box-shadow: 0 0 18px rgba(255, 198, 120, 0.25);
+      }
+
+      h1 {
+        margin: 18px 0 0;
+        font-size: 44px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        max-width: 820px;
+      }
+      @media (max-width: 720px) {
+        h1 { font-size: 36px; }
+      }
+
+      p.lead {
+        margin: 14px 0 0;
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .ctaRow {
+        margin-top: 18px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .section {
+        margin-top: 34px;
+      }
+
+      .section h2 {
+        margin: 0 0 14px;
+        font-size: 16px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 860px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+
+      .card {
+        border-radius: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      .card .kicker {
+        font-size: 12px;
+        color: var(--muted2);
+        margin-bottom: 6px;
+      }
+
+      .card .name {
+        font-size: 15px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.55;
+      }
+
+      ul.bullets {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      ul.bullets li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .bDot {
+        margin-top: 7px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+        flex: 0 0 auto;
+      }
+
+      .card a.primary {
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.92);
+        text-decoration: none;
+        font-size: 13px;
+      }
+      .card a.primary:hover { background: rgba(255, 255, 255, 0.12); }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      footer {
+        margin-top: 34px;
+      }
+
+      .footCard {
+        border-radius: 18px;
+        background: var(--card2);
+        border: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      .footGrid {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 860px) {
+        .footGrid { grid-template-columns: 1fr; }
+      }
+
+      .footLabel { font-size: 12px; color: var(--muted2); }
+      .footLink {
+        display: inline-block;
+        margin-top: 6px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.92);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      .legal { margin-top: 14px; font-size: 12px; color: rgba(255, 255, 255, 0.5); }
+
+      .smallNote {
+        margin-top: 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.55);
+      }
     </style>
-</head>
-<body>
-    <div class="animated-bg"></div>
-    
-    <!-- Floating Particles -->
-    <div class="particles"></div>
+  </head>
 
-    <div class="app-container">
-        <!-- Coming Soon Badge -->
-        <div class="coming-soon-badge">
-            ✨ Coming Soon
+  <body>
+    <div class="bg"></div>
+
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <div class="title">BeastTaleForge</div>
+            <div class="sub">gateway to companion worlds</div>
+          </div>
         </div>
 
-        <!-- Header -->
-        <header>
-            <div class="header-container">
-                <div class="logo-container">
-                    <div class="logo">🐾</div>
-                    <div class="logo-text">BeastTaleForge</div>
-                </div>
-                <nav>
-                    <ul class="nav-menu">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#tribute">Maizy's Story</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                    <div class="menu-toggle">
-                        <div class="menu-line"></div>
-                        <div class="menu-line"></div>
-                        <div class="menu-line"></div>
-                    </div>
-                </nav>
-            </div>
-        </header>
-
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero-content">
-                <div class="hero-logo">
-                    <img src="images/btf-logo.png" 
-                         alt="BeastTaleForge Logo" 
-                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size: 5rem; color: var(--primary-blue);\'>🐾</div>'" />
-                </div>
-                <h1>BeastTaleForge</h1>
-                <div class="tagline">Where Pets Become Legends</div>
-                <p class="hero-description">
-                    Transform your beloved companions into epic heroes. Create magical RPG adventures for your tabletop pets 
-                    or craft personalized storybooks that celebrate the extraordinary bond you share.
-                </p>
-                <div class="cta-container">
-                    <a href="pet-quest/" class="cta-btn cta-primary" data-feature="quest">
-                        🗡️ Pet Quest Adventures
-                    </a>
-                    <a href="storybooks/" class="cta-btn cta-secondary" data-feature="storybook">
-                        📖 Pet Storybooks
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features" id="features">
-            <div class="features-container">
-                <h2 class="section-title">Two Magical Experiences</h2>
-                <p class="section-subtitle">Powered by AI to bring your pet's adventures to life</p>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎲</div>
-                        <h3>Pet Quest Adventures</h3>
-                        <p>While your RPG hero takes a long rest, send their loyal companion on thrilling online quests. 
-                        Team up with 1-4 other pets for hour-long adventures that reward them with whimsical powers 
-                        and abilities. Compatible with any tabletop RPG system - from fantasy to sci-fi, horror to superhero adventures!</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📚</div>
-                        <h3>Pet Storybooks</h3>
-                        <p>Upload photos of your real pet and watch as AI creates a personalized adventure story 
-                        featuring them as the hero. Choose the genre, set the age rating, and receive a beautifully 
-                        illustrated digital book you can download or order as a premium printed keepsake.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="about-section" id="about">
-            <div class="features-container">
-                <h2 class="section-title">About BeastTaleForge</h2>
-                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-                    <p style="font-size: 1.2rem; line-height: 1.6; color: var(--dark-charcoal); opacity: 0.9; margin-bottom: 2rem;">
-                        BeastTaleForge is a revolutionary platform that bridges the gap between tabletop gaming and pet storytelling. 
-                        We believe every pet has a heroic story waiting to be told, whether they're accompanying brave adventurers 
-                        on epic quests or starring in their own personalized tales.
-                    </p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                        <div style="padding: 2rem; background: var(--white); border-radius: 16px; box-shadow: 0 4px 16px rgba(74, 124, 138, 0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 1rem;">🎮</div>
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">For Gamers</h3>
-                            <p style="color: var(--dark-charcoal); opacity: 0.8;">Extend your tabletop RPG experience by giving your hero's companion their own adventures while you rest.</p>
-                        </div>
-                        <div style="padding: 2rem; background: var(--white); border-radius: 16px; box-shadow: 0 4px 16px rgba(74, 124, 138, 0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 1rem;">🐾</div>
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">For Pet Lovers</h3>
-                            <p style="color: var(--dark-charcoal); opacity: 0.8;">Transform your beloved pet into the star of their own AI-generated adventure story with custom illustrations.</p>
-                        </div>
-                        <div style="padding: 2rem; background: var(--white); border-radius: 16px; box-shadow: 0 4px 16px rgba(74, 124, 138, 0.1);">
-                            <div style="font-size: 2rem; margin-bottom: 1rem;">🤖</div>
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">AI-Powered</h3>
-                            <p style="color: var(--dark-charcoal); opacity: 0.8;">Advanced AI creates unique quests, stories, and illustrations tailored to your pet's personality and appearance.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Maizy Tribute Section -->
-        <section class="maizy-tribute" id="tribute">
-            <div class="tribute-container">
-                <div class="maizy-memorial">
-                    <div class="maizy-photo-container">
-                        <img src="images/maizy-tunnel.jpg" 
-                             alt="Maizy - Beautiful tabby and white cat"
-                             class="maizy-photo"
-                             style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.2); margin: 0 auto 2rem; display: block;" />
-                    </div>
-                    <h2 class="tribute-title">Inspired by Maizy</h2>
-                    <div class="tribute-subtitle" style="font-size: 1rem; margin-bottom: 2rem; opacity: 0.9;">
-                        ✨ Forever in our hearts ✨
-                    </div>
-                    <p class="tribute-text">
-                        "Every pet has a story that deserves to be told. BeastTaleForge was born from the love and memories 
-                        of Maizy, this remarkable tabby and white cat whose spirit during times of grief showed us the incredible bond between 
-                        humans and their companions. Through her golden eyes and playful nature, we learned that our pets aren't just animals—they're heroes, 
-                        storytellers, and sources of endless inspiration. This platform honors all the Maizys in our lives 
-                        who teach us about courage, love, and the magic of friendship."
-                    </p>
-                    <div class="maizy-legacy" style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 16px; font-style: italic;">
-                        "In every pet quest adventure and every personalized storybook, Maizy's spirit of curiosity, comfort, and companionship lives on."
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="contact-section" id="contact">
-            <div class="features-container">
-                <h2 class="section-title">Get In Touch</h2>
-                <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                    <p style="font-size: 1.2rem; line-height: 1.6; color: var(--dark-charcoal); opacity: 0.9; margin-bottom: 3rem;">
-                        Ready to turn your pet into a legend? Have questions about our upcoming features? We'd love to hear from you!
-                    </p>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                        <div style="padding: 2rem; background: var(--light-gray); border-radius: 16px; text-align: center;">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📧</div>
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Email Us</h3>
-                            <a href="mailto:hello@beasttaleforge.com" style="color: var(--primary-blue); text-decoration: none; font-size: 1.1rem; font-weight: 600;">
-                                hello@beasttaleforge.com
-                            </a>
-                            <p style="margin-top: 0.5rem; color: var(--dark-charcoal); opacity: 0.7; font-size: 0.9rem;">General inquiries & support</p>
-                        </div>
-                        
-                        <div style="padding: 2rem; background: var(--light-gray); border-radius: 16px; text-align: center;">
-                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔔</div>
-                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Stay Updated</h3>
-                            <a href="mailto:updates@beasttaleforge.com?subject=Subscribe to Updates" style="color: var(--primary-blue); text-decoration: none; font-size: 1.1rem; font-weight: 600;">
-                                updates@beasttaleforge.com
-                            </a>
-                            <p style="margin-top: 0.5rem; color: var(--dark-charcoal); opacity: 0.7; font-size: 0.9rem;">Get notified when we launch</p>
-                        </div>
-                    </div>
-                    
-                    <div style="padding: 2rem; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); border-radius: 16px; color: white; text-align: center;">
-                        <h3 style="margin-bottom: 1rem;">Early Access</h3>
-                        <p style="margin-bottom: 1.5rem; opacity: 0.9;">Be among the first to experience BeastTaleForge when we launch!</p>
-                        <a href="mailto:hello@beasttaleforge.com?subject=Early Access Request&body=Hi! I'm interested in early access to BeastTaleForge. Please let me know when it becomes available!" 
-                           style="background: white; color: var(--primary-blue); text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; display: inline-block; transition: transform 0.2s ease;">
-                            Request Early Access
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Install App Prompt -->
-        <div class="install-prompt" id="installPrompt">
-            <div class="install-text">
-                <strong>Install BeastTaleForge</strong><br>
-                Add to your home screen for the best experience!
-            </div>
-            <button class="install-btn" id="installBtn">Install</button>
-            <button class="dismiss-btn" id="dismissBtn">×</button>
+        <div class="nav">
+          <a class="btn" href="https://everfablelabs-site.vercel.app/" target="_blank" rel="noreferrer">
+            Studio: EverFable Labs
+          </a>
+          <a class="btn" href="#paths">Enter</a>
+          <a class="btn" href="#contact">Contact</a>
         </div>
+      </header>
+
+      <section class="section">
+        <div class="pill"><span class="dot"></span>Gateway · BeastTaleForge</div>
+        <h1>Worlds forged from companionship, memory, and quiet magic.</h1>
+        <p class="lead">
+          This is the front door. Choose a path and step into a world—either a gentle adventure built for companions,
+          or a place of remembrance designed to preserve what matters.
+        </p>
+
+        <div class="ctaRow">
+          <a class="btn" href="#paths">Choose a path</a>
+          <a class="btn" href="https://beasttaleforge-site.vercel.app/" target="_blank" rel="noreferrer">
+            Open the World Hub
+          </a>
+        </div>
+
+        <div class="smallNote">
+          Note: this gateway is intentionally brief. The experience lives inside the world.
+        </div>
+      </section>
+
+      <section id="paths" class="section">
+        <h2>Choose a path</h2>
+
+        <div class="grid">
+          <div class="card">
+            <div class="kicker">Path 1</div>
+            <div class="name">Companion Quests</div>
+            <p>
+              Short, GM-less adventures for your companion during RPG downtime. Designed to be fast, replayable, and
+              meaning-first.
+            </p>
+            <ul class="bullets">
+              <li><span class="bDot"></span><span>1–4 players</span></li>
+              <li><span class="bDot"></span><span>No GM required</span></li>
+              <li><span class="bDot"></span><span>Clear prompts, gentle structure</span></li>
+            </ul>
+            <a class="primary" href="https://beasttaleforge-site.vercel.app/?path=quests" target="_blank" rel="noreferrer">
+              Enter Companion Quests
+            </a>
+          </div>
+
+          <div class="card">
+            <div class="kicker">Path 2</div>
+            <div class="name">Remembrance Stories</div>
+            <p>
+              A quiet world to preserve and return to the bond you shared—crafted with restraint, care, and emotional
+              clarity.
+            </p>
+            <ul class="bullets">
+              <li><span class="bDot"></span><span>Keepsake worlds & chapters</span></li>
+              <li><span class="bDot"></span><span>Ongoing stories (not static pages)</span></li>
+              <li><span class="bDot"></span><span>Respectful tone by design</span></li>
+            </ul>
+            <a class="primary" href="https://beasttaleforge-site.vercel.app/?path=remembrance" target="_blank" rel="noreferrer">
+              Enter Remembrance Stories
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contact" class="section">
+        <div class="footCard">
+          <h2 style="margin:0; font-size:14px;">Contact</h2>
+
+          <div class="footGrid">
+            <div>
+              <div class="footLabel">Email</div>
+              <a class="footLink" href="mailto:admin@beasttaleforge.com">admin@beasttaleforge.com</a>
+            </div>
+
+            <div>
+              <div class="footLabel">Built by the studio</div>
+              <a class="footLink" href="https://everfablelabs-site.vercel.app/" target="_blank" rel="noreferrer">
+                EverFable Labs
+              </a>
+            </div>
+          </div>
+
+          <div class="legal">© 2026 BeastTaleForge (Incubated by EverFable Labs LLC)</div>
+        </div>
+      </footer>
     </div>
-
-    <script>
-        // PWA Installation and Setup
-        let deferredPrompt;
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
-        const dismissBtn = document.getElementById('dismissBtn');
-
-        // Check if already installed or if prompt should be shown
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show install prompt after a delay
-            setTimeout(() => {
-                if (installPrompt) {
-                    installPrompt.style.display = 'flex';
-                }
-            }, 3000);
-        });
-
-        // Handle install button click
-        if (installBtn) {
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User response to install prompt: ${outcome}`);
-                    deferredPrompt = null;
-                }
-                if (installPrompt) {
-                    installPrompt.style.display = 'none';
-                }
-            });
-        }
-
-        // Handle dismiss button click
-        if (dismissBtn) {
-            dismissBtn.addEventListener('click', () => {
-                if (installPrompt) {
-                    installPrompt.style.display = 'none';
-                }
-                localStorage.setItem('installPromptDismissed', 'true');
-            });
-        }
-
-        // Don't show prompt if previously dismissed
-        if (localStorage.getItem('installPromptDismissed')) {
-            if (installPrompt) {
-                installPrompt.style.display = 'none';
-            }
-        }
-
-        // DOM Content Loaded Event Handler
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create floating particles
-            createFloatingParticles();
-
-            // Smooth scrolling for navigation links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href').substring(1);
-                    const target = document.getElementById(targetId);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Enhanced scroll effect for header
-            let lastScrollY = window.scrollY;
-            window.addEventListener('scroll', () => {
-                const header = document.querySelector('header');
-                const currentScrollY = window.scrollY;
-                
-                if (header) {
-                    if (currentScrollY > 100) {
-                        header.style.background = 'rgba(255, 255, 255, 0.98)';
-                        header.style.boxShadow = '0 4px 30px rgba(74, 124, 138, 0.15)';
-                    } else {
-                        header.style.background = 'rgba(255, 255, 255, 0.95)';
-                        header.style.boxShadow = '0 2px 20px rgba(74, 124, 138, 0.1)';
-                    }
-
-                    // Hide/show header on scroll
-                    if (currentScrollY > lastScrollY && currentScrollY > 200) {
-                        header.style.transform = 'translateY(-100%)';
-                    } else {
-                        header.style.transform = 'translateY(0)';
-                    }
-                    lastScrollY = currentScrollY;
-                }
-            });
-
-            // Enhanced CTA button interactions
-            document.querySelectorAll('.cta-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    // Only show modal if href is # or empty, otherwise allow normal navigation
-                    if (href === '#' || href === '' || !href) {
-                        e.preventDefault();
-                        const feature = this.getAttribute('data-feature');
-                        showFeatureModal(feature);
-                    }
-                    // For actual URLs like 'pet-quest/' or 'storybooks/', let the browser navigate normally
-                });
-
-                // Add haptic feedback on mobile
-                button.addEventListener('touchstart', function() {
-                    if (navigator.vibrate) {
-                        navigator.vibrate(10);
-                    }
-                }, { passive: true });
-            });
-
-            // Mobile menu toggle
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            if (menuToggle && navMenu) {
-                menuToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                });
-            }
-
-            // Intersection Observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Observe feature cards
-            document.querySelectorAll('.feature-card').forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-
-            // Add touch gestures for mobile
-            let touchStartX = 0;
-            let touchStartY = 0;
-
-            document.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
-
-            document.addEventListener('touchend', e => {
-                const touchEndX = e.changedTouches[0].screenX;
-                const touchEndY = e.changedTouches[0].screenY;
-                handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
-            }, { passive: true });
-        });
-
-        // Create floating particles effect with pets (fin, fur, and scale)
-        function createFloatingParticles() {
-            const particles = document.querySelector('.particles');
-            if (!particles) return;
-            
-            const petEmojis = [
-                // Fur pets
-                '🐱', '🐶', '🐭', '🐹', '🐰', '🦊', '🐺', '🐻', '🐼', '🐨', '🦔', '🐿️',
-                // Scale pets (reptiles and fish)
-                '🐍', '🦎', '🐢', '🐊', '🐸', '🐟', '🐠', '🐡', '🦈', '🐙', '🦀', '🦞',
-                // Feathered friends
-                '🐦', '🦅', '🦆', '🦢', '🦜', '🐧', '🦩', '🐔', '🦚',
-                // Exotic pets
-                '🦝', '🐅', '🦁', '🐯', '🐴', '🦄', '🐲'
-            ];
-            
-            function createParticle() {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = petEmojis[Math.floor(Math.random() * petEmojis.length)];
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                
-                particles.appendChild(particle);
-                
-                // Remove particle after animation
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.parentNode.removeChild(particle);
-                    }
-                }, 25000);
-            }
-
-            // Create initial particles
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createParticle, i * 2000);
-            }
-
-            // Continue creating particles
-            setInterval(createParticle, 4000);
-        }
-
-        // Show feature modal
-        function showFeatureModal(feature) {
-            const messages = {
-                quest: "🎲 Pet Quest Adventures - Coming Soon!\n\nGet ready to send your RPG hero's pet on epic online quests while they rest. Team up with other pets for magical adventures that reward them with whimsical powers!\n\n✨ Features:\n• 1-4 player multiplayer quests\n• 1-hour adventure sessions\n• Compatible with any tabletop RPG system\n• Whimsical rewards and abilities\n• Real-time quest matching",
-                storybook: "📖 Pet Storybooks - Coming Soon!\n\nTransform your beloved pet into the star of their own personalized adventure story. Upload photos and watch AI create a magical tale just for them!\n\n✨ Features:\n• AI-powered story generation\n• Custom illustrations\n• Multiple genres available\n• Age-appropriate content\n• Digital download & print options"
-            };
-            
-            alert(messages[feature] || "This amazing feature is coming soon!");
-        }
-
-        // Handle swipe gestures
-        function handleSwipe(startX, startY, endX, endY) {
-            const diffX = startX - endX;
-            const diffY = startY - endY;
-            
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    // Swipe left
-                    console.log('Swipe left detected');
-                } else {
-                    // Swipe right
-                    console.log('Swipe right detected');
-                }
-            }
-        }
-
-        // Handle app installed
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('BeastTaleForge has been installed');
-            localStorage.setItem('appInstalled', 'true');
-        });
-
-        // Performance monitoring
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                if (perfData) {
-                    console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-                }
-            }, 0);
-        });
-    </script>
-</body>
+  </body>
 </html>
